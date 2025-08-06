@@ -15,6 +15,8 @@ import RxCocoa
 final class LaunchViewController: UIViewController {
     
     weak var delegate: LaunchCoordinatorDelegate?
+    private var disposeBag = DisposeBag()
+    
     @UserDefaultsWrapper(key: "isGuestMode", defaultValue: false)
     private var guestMode: Bool
     
@@ -92,11 +94,21 @@ private extension LaunchViewController {
             $0.top.equalTo(guestButton.snp.bottom).offset(16)
         }
     }
+    
+    func hideViewAnimation() {
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            self?.view.alpha = 0
+        }) { _ in
+            self.delegate?.pushMainViewController()
+        }
+    }
+    
     func playLottie() {
         lottie.play { [weak self] _ in
             guard let self else { return }
             
             if self.guestMode || self.isLogin {
+                self.hideViewAnimation()
             } else {
                 UIView.animate(withDuration: 0.5) {
                     self.lottie.frame.origin.y -= 150
@@ -105,5 +117,16 @@ private extension LaunchViewController {
                 }
             }
         }
+    }
+    
+    func bind() {
+        guestButton.rx.tap
+            .withUnretained(self)
+            .asSignal(onErrorSignalWith: .empty())
+            .emit { owner, _ in
+                owner.guestMode = true
+                owner.hideViewAnimation()
+            }
+            .disposed(by: disposeBag)
     }
 }
