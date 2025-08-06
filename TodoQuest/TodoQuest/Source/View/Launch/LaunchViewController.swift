@@ -14,6 +14,11 @@ import RxCocoa
 
 final class LaunchViewController: UIViewController {
     
+    @UserDefaultsWrapper(key: "isGuestMode", defaultValue: false)
+    private var guestMode: Bool
+    
+    @UserDefaultsWrapper(key: "isLogin", defaultValue: false)
+    private var isLogin: Bool
     
     private let lottie = LottieAnimationView(name: "todoquest").then {
         $0.loopMode = .playOnce
@@ -90,11 +95,14 @@ private extension LaunchViewController {
         lottie.play { [weak self] _ in
             guard let self else { return }
             
+            if self.guestMode || self.isLogin {
+            } else {
                 UIView.animate(withDuration: 0.5) {
                     self.lottie.frame.origin.y -= 150
                     self.guestButton.alpha = 1
                     self.appleButton.alpha = 1
                 }
+            }
         }
     }
 }
