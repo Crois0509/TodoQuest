@@ -14,6 +14,7 @@ import RxCocoa
 
 final class LaunchViewController: UIViewController {
     
+    weak var delegate: LaunchCoordinatorDelegate?
     @UserDefaultsWrapper(key: "isGuestMode", defaultValue: false)
     private var guestMode: Bool
     
