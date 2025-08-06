@@ -46,7 +46,7 @@
 		AA9FE0F12E422A08001BE493 /* Exceptions for "TodoQuest" folder in "TodoQuest" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Application/Info.plist,
 			);
 			target = AA9FE0C82E422A06001BE493 /* TodoQuest */;
 		};
@@ -332,7 +332,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 52LJKQN5WQ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TodoQuest/Info.plist;
+				INFOPLIST_FILE = TodoQuest/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -363,7 +363,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 52LJKQN5WQ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TodoQuest/Info.plist;
+				INFOPLIST_FILE = TodoQuest/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
