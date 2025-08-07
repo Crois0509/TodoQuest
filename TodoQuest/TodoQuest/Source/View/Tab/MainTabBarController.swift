@@ -12,7 +12,168 @@ import RxSwift
 import RxCocoa
 
 final class MainTabBarController: UIViewController {
+    
+    private var viewControllers: [UIViewController]
+    
+    private let selectedTabIndex = BehaviorRelay<Int>(value: 0)
+    private var disposeBag = DisposeBag()
+    
+    private let tabStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.distribution = .fillEqually
+        $0.alignment = .fill
+        $0.backgroundColor = .clear
+    }
+    
+    private let backgroundView = UIView().then {
+        $0.backgroundColor = .CustomColors.lightGray
+        $0.layer.cornerRadius = 16
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        $0.layer.masksToBounds = false
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOffset = .init(width: 0, height: -2)
+        $0.layer.shadowRadius = 6
+        $0.layer.shadowOpacity = 0.3
+    }
+    
+    init(_ viewControllers: [UIViewController]) {
+        self.viewControllers = viewControllers
+        super.init(nibName: nil, bundle: nil)
+        
+        self.viewControllers.enumerated()
+            .filter { $0.offset != 0 }
+            .forEach { $0.element.view.alpha = 0 }
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupUI()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        backgroundView.layer.shadowPath = .init(rect: backgroundView.bounds, transform: nil)
+    }
+    
 }
+
+// MARK: - UI Setting Method
+
+private extension MainTabBarController {
+    
+    func setupUI() {
+        setupTabBar()
+        configureSelf()
+        setupLayout()
+        setupChildVC(0)
+        bind()
+    }
+    
+    func configureSelf() {
+        view.backgroundColor = .clear
+        [backgroundView, tabStackView].forEach {
+            view.addSubview($0)
+        }
+    }
+    
+    func setupLayout() {
+        backgroundView.snp.makeConstraints {
+            $0.directionalHorizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
+        tabStackView.snp.makeConstraints {
+            $0.top.equalTo(backgroundView).offset(8)
+            $0.directionalHorizontalEdges.equalTo(backgroundView).inset(20)
+        }
+    }
+    
+    func setupChildVC(_ index: Int) {
+        let vc = viewControllers[index]
+        addChild(vc)
+        view.addSubview(vc.view)
+        vc.view.snp.makeConstraints {
+            $0.directionalEdges.equalToSuperview()
+        }
+        vc.didMove(toParent: self)
+        view.bringSubviewToFront(backgroundView)
+        view.bringSubviewToFront(tabStackView)
+    }
+    
+    func setupTabBar() {
+        for (index, tab) in TabBarItems.allCases.enumerated() {
+            let button = UIButton(configuration: .tabButtonStyle(tab.title, tab.image))
+            button.tag = index
+            tabStackView.addArrangedSubview(button)
+        }
+    }
+    
+    func transitionToViewController(at index: Int) {
+        guard index < viewControllers.count else { return }
+        
+        let fromVC = children.first
+        let toVC = viewControllers[index]
+        
+        guard fromVC !== toVC else { return }
+        
+        fromVC?.willMove(toParent: nil)
+        setupChildVC(index)
+        
+        UIView.animate(withDuration: 0.3) {
+            fromVC?.view.alpha = 0
+            toVC.view.alpha = 1
+        } completion: { _ in
+            fromVC?.view.removeFromSuperview()
+            fromVC?.removeFromParent()
+        }
+    }
+    
+    func updateButtonTintColor(selected index: Int) {
+        let buttons = tabStackView.arrangedSubviews.compactMap { $0 as? UIButton }
+        
+        buttons.forEach { button in
+            if button.tag == index {
+                button.configuration?.baseForegroundColor = .CustomColors.personal
+                button.configuration?.attributedTitle?.font = UIFont.boldSystemFont(ofSize: 14)
+            } else {
+                button.configuration?.baseForegroundColor = .CustomColors.blueGray
+                button.configuration?.attributedTitle?.font = UIFont.systemFont(ofSize: 14)
+            }
+        }
+    }
+    
+    func bind() {
+        let buttons = tabStackView.arrangedSubviews.compactMap { $0 as? UIButton }
+        
+        buttons.forEach { [weak self] button in
+            guard let self else { return }
+            button.rx.tap
+                .map { button.tag }
+                .throttle(.seconds(1), latest: false, scheduler: MainScheduler())
+                .bind(to: self.selectedTabIndex)
+                .disposed(by: disposeBag)
+        }
+        
+        selectedTabIndex
+            .withUnretained(self)
+            .asSignal(onErrorSignalWith: .empty())
+            .emit { owner, index in
+                owner.transitionToViewController(at: index)
+                owner.updateButtonTintColor(selected: index)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+}
+
 extension MainTabBarController {
     enum TabBarItems: CaseIterable {
         case home, calendar, myPage
