@@ -40,9 +40,15 @@ private extension MainViewController {
     }
     
     func configureSelf() {
+        let leftButton = createBarButton().then {
+            $0.tintColor = .clear
+            $0.isEnabled = false
+        }
+        
         navigationController?.isNavigationBarHidden = false
         navigationItem.titleView = titleLogo
         navigationItem.setRightBarButton(createBarButton(), animated: false)
+        navigationItem.setLeftBarButton(leftButton, animated: false)
         
         view.backgroundColor = .CustomColors.mainWhite
     }
