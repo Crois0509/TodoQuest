@@ -13,7 +13,7 @@ import RxCocoa
 
 final class MainTabBarController: UIViewController {
     
-    private var viewControllers: [UIViewController]
+    private var viewControllers: [UIViewController] // 각 탭별 ViewController
     
     private let selectedTabIndex = BehaviorRelay<Int>(value: 0)
     private var disposeBag = DisposeBag()
@@ -40,6 +40,8 @@ final class MainTabBarController: UIViewController {
         self.viewControllers = viewControllers
         super.init(nibName: nil, bundle: nil)
         
+        // ViewControllers 초기 설정
+        // 0번째 View 외에 alpha 값을 0으로 설정 -> 부드러운 애니메이션을 연출을 위해
         self.viewControllers.enumerated()
             .filter { $0.offset != 0 }
             .forEach { $0.element.view.alpha = 0 }
@@ -96,6 +98,8 @@ private extension MainTabBarController {
         }
     }
     
+    /// 현재 탭 바에 표시될 ChildViewController 설정
+    /// - Parameter index: Child ViewController Index
     func setupChildVC(_ index: Int) {
         let vc = viewControllers[index]
         addChild(vc)
@@ -116,6 +120,8 @@ private extension MainTabBarController {
         }
     }
     
+    /// 현재 화면에 표시되는 뷰를 변경하는 메소드
+    /// - Parameter index: 변경할 인덱스
     func transitionToViewController(at index: Int) {
         guard index < viewControllers.count else { return }
         
@@ -136,6 +142,8 @@ private extension MainTabBarController {
         }
     }
     
+    /// 버튼의 색상을 변경하는 메소드
+    /// - Parameter index: 현재 선택된 버튼의 인덱스
     func updateButtonTintColor(selected index: Int) {
         let buttons = tabStackView.arrangedSubviews.compactMap { $0 as? UIButton }
         
@@ -174,7 +182,10 @@ private extension MainTabBarController {
     
 }
 
+// MARK: - TabBar에서 사용할 아이템 목록
+
 extension MainTabBarController {
+    
     enum TabBarItems: CaseIterable {
         case home, calendar, myPage
         
@@ -200,4 +211,5 @@ extension MainTabBarController {
             }
         }
     }
+    
 }
