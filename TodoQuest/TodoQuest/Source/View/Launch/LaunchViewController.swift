@@ -97,7 +97,10 @@ private extension LaunchViewController {
     
     func hideViewAnimation() {
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.view.alpha = 0
+            self?.view.backgroundColor = .CustomColors.mainWhite
+            self?.lottie.alpha = 0
+            self?.guestButton.alpha = 0
+            self?.appleButton.alpha = 0
         }) { _ in
             self.delegate?.pushMainViewController()
         }
