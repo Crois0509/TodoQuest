@@ -18,6 +18,8 @@ final class MainViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
         $0.backgroundColor = .clear
     }
+    
+    private let mainTab = MainTabBarController([FirstVC(), SecondVC(), ThirdVC()])
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,7 @@ private extension MainViewController {
     func setupUI() {
         configureSelf()
         setupLayout()
+        setupChildVC()
     }
     
     func configureSelf() {
@@ -46,6 +49,16 @@ private extension MainViewController {
     
     func setupLayout() {
         
+    }
+    
+    func setupChildVC() {
+        addChild(mainTab)
+        view.addSubview(mainTab.view)
+        mainTab.view.snp.makeConstraints {
+            $0.top.directionalHorizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalToSuperview()
+        }
+        mainTab.didMove(toParent: self)
     }
     
     func createBarButton() -> UIBarButtonItem {
