@@ -19,7 +19,7 @@ final class MainViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
-    private let mainTab = MainTabBarController([FirstVC(), SecondVC(), ThirdVC()])
+    private let mainTab = MainTabBarController([HomeViewController(), SecondVC(), ThirdVC()])
 
     override func viewDidLoad() {
         super.viewDidLoad()
