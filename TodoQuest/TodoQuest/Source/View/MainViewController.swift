@@ -35,7 +35,6 @@ private extension MainViewController {
     
     func setupUI() {
         configureSelf()
-        setupLayout()
         setupChildVC()
     }
     
@@ -50,11 +49,7 @@ private extension MainViewController {
         navigationItem.setRightBarButton(createBarButton(), animated: false)
         navigationItem.setLeftBarButton(leftButton, animated: false)
         
-        view.backgroundColor = .CustomColors.mainWhite
-    }
-    
-    func setupLayout() {
-        
+        view.backgroundColor = .Background.background
     }
     
     func setupChildVC() {
@@ -69,7 +64,7 @@ private extension MainViewController {
     
     func createBarButton() -> UIBarButtonItem {
         return UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: nil, action: nil).then {
-            $0.tintColor = .CustomColors.mainBlack
+            $0.tintColor = .Label.blackLabel
         }
     }
     

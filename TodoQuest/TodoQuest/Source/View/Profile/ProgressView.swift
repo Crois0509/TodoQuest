@@ -32,7 +32,7 @@ final class ProgressView: UIView {
         set { backgroundLayer.backgroundColor = newValue?.cgColor }
     }
     
-    init(_ bgColor: UIColor = .CustomColors.lightGray, _ progressColor: UIColor = .CustomColors.personal) {
+    init(_ bgColor: UIColor = .View.textField, _ progressColor: UIColor = .CustomColors.personal) {
         super.init(frame: .zero)
         backgroundLayer.backgroundColor = bgColor.cgColor
         progressLayer.backgroundColor = progressColor.cgColor

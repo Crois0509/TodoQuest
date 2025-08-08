@@ -26,7 +26,7 @@ final class MainTabBarController: UIViewController {
     }
     
     private let backgroundView = UIView().then {
-        $0.backgroundColor = .CustomColors.lightGray
+        $0.backgroundColor = .View.lightGrayBody
         $0.layer.cornerRadius = 16
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.masksToBounds = false

@@ -13,8 +13,8 @@ final class MainProfileView: UIView {
     
     private let profileImage = UIImageView().then {
         $0.contentMode = .scaleAspectFit
-        $0.tintColor = .CustomColors.blueGray
-        $0.backgroundColor = .CustomColors.lightGray
+        $0.tintColor = .View.profileTint
+        $0.backgroundColor = .View.profileBackground
         $0.clipsToBounds = true
         $0.image = UIImage(systemName: "person")
     }
@@ -22,7 +22,7 @@ final class MainProfileView: UIView {
     private let nameLabel = UILabel().then {
         $0.font = .SCDream(size: 16, weight: .medium)
         $0.numberOfLines = 1
-        $0.textColor = .CustomColors.mainBlack
+        $0.textColor = .Label.blackLabel
         $0.textAlignment = .left
         $0.backgroundColor = .clear
     }
@@ -30,7 +30,7 @@ final class MainProfileView: UIView {
     private let levelLabel = UILabel().then {
         $0.font = .SCDream(size: 14, weight: .regular)
         $0.numberOfLines = 1
-        $0.textColor = .CustomColors.blueGray
+        $0.textColor = .Label.grayLabel
         $0.textAlignment = .left
         $0.backgroundColor = .clear
     }
@@ -38,7 +38,7 @@ final class MainProfileView: UIView {
     private let expLabel = UILabel().then {
         $0.font = .SCDream(size: 10, weight: .regular)
         $0.numberOfLines = 1
-        $0.textColor = .CustomColors.blueGray
+        $0.textColor = .Label.grayLabel
         $0.textAlignment = .left
         $0.backgroundColor = .clear
     }
@@ -92,7 +92,7 @@ private extension MainProfileView {
         [profileImage, labelStack].forEach {
             addSubview($0)
         }
-        backgroundColor = .CustomColors.mainWhite
+        backgroundColor = .View.whiteBody
         layer.cornerRadius = 20
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = .init(width: 0, height: 0)
