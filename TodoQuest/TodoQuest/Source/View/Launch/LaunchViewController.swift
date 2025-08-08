@@ -32,7 +32,7 @@ final class LaunchViewController: UIViewController {
         $0.setTitle("로그인 없이 이용", for: .normal)
         $0.setTitleColor(.CustomColors.mainWhite, for: .normal)
         $0.backgroundColor = .CustomColors.mainBlack
-        $0.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        $0.titleLabel?.font = .SCDream(size: 24, weight: .bold)
         $0.layer.cornerRadius = 8
         $0.alpha = 0
     }
@@ -41,7 +41,7 @@ final class LaunchViewController: UIViewController {
         $0.setTitle("Sign in with Apple", for: .normal)
         $0.setTitleColor(.CustomColors.mainBlack, for: .normal)
         $0.backgroundColor = .CustomColors.mainWhite
-        $0.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        $0.titleLabel?.font = .SCDream(size: 24, weight: .bold)
         $0.layer.cornerRadius = 8
         $0.alpha = 0
     }

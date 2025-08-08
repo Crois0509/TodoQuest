@@ -150,10 +150,8 @@ private extension MainTabBarController {
         buttons.forEach { button in
             if button.tag == index {
                 button.configuration?.baseForegroundColor = .CustomColors.personal
-                button.configuration?.attributedTitle?.font = UIFont.boldSystemFont(ofSize: 14)
             } else {
                 button.configuration?.baseForegroundColor = .CustomColors.blueGray
-                button.configuration?.attributedTitle?.font = UIFont.systemFont(ofSize: 14)
             }
         }
     }

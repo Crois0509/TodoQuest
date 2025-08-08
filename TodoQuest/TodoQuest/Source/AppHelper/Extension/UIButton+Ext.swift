@@ -21,7 +21,7 @@ extension UIButton.Configuration {
         config.imagePadding = 4
         
         var attr = AttributedString(title ?? "")
-        attr.font = .systemFont(ofSize: 14)
+        attr.font = .SCDream(size: 14, weight: .medium)
         attr.foregroundColor = .CustomColors.blueGray
         config.attributedTitle = attr
         config.baseBackgroundColor = .clear

@@ -20,7 +20,7 @@ final class MainProfileView: UIView {
     }
     
     private let nameLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 16, weight: .medium)
+        $0.font = .SCDream(size: 16, weight: .medium)
         $0.numberOfLines = 1
         $0.textColor = .CustomColors.mainBlack
         $0.textAlignment = .left
@@ -28,7 +28,7 @@ final class MainProfileView: UIView {
     }
     
     private let levelLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 14, weight: .regular)
+        $0.font = .SCDream(size: 14, weight: .regular)
         $0.numberOfLines = 1
         $0.textColor = .CustomColors.blueGray
         $0.textAlignment = .left
@@ -36,7 +36,7 @@ final class MainProfileView: UIView {
     }
     
     private let expLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 10, weight: .regular)
+        $0.font = .SCDream(size: 10, weight: .regular)
         $0.numberOfLines = 1
         $0.textColor = .CustomColors.blueGray
         $0.textAlignment = .left
