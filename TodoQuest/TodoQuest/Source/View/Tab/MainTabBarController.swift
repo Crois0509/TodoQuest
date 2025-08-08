@@ -64,6 +64,12 @@ final class MainTabBarController: UIViewController {
         backgroundView.layer.shadowPath = .init(rect: backgroundView.bounds, transform: nil)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        backgroundView.layer.shadowColor = UIColor.Label.blackLabel.cgColor
+    }
+    
 }
 
 // MARK: - UI Setting Method

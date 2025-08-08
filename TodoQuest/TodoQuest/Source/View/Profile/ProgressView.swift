@@ -52,8 +52,14 @@ final class ProgressView: UIView {
         updateProgressSize()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        backgroundColor = .View.textField
+    }
+    
     private func updateProgressSize() {
-        let rect = bounds.insetBy(dx: 4, dy: 4)
+        let rect = bounds.insetBy(dx: 3, dy: 3)
         let width = rect.width * state
         let size = CGSize(width: width, height: rect.height)
         

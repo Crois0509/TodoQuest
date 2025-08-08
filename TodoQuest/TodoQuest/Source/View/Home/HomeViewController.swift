@@ -19,6 +19,11 @@ final class HomeViewController: UIViewController {
         profileView.configProfile(.init(image: nil, name: "Admin1234", level: 10, exp: 980, progress: 0.54))
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        
+        profileView.layer.shadowColor = UIColor.Label.blackLabel.cgColor
+    }
+    
 }
 
 // MARK: - UI Setting Method
