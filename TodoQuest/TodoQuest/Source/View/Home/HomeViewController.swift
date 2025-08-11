@@ -30,6 +30,12 @@ final class HomeViewController: UIViewController {
     
     private let profileView = MainProfileView()
     private let questList = QuestListView()
+    private let addButton = UIButton(configuration: .floatingButtonStyle).then {
+        $0.layer.shadowColor = UIColor.Label.blackLabel.cgColor
+        $0.layer.shadowOpacity = 0.3
+        $0.layer.shadowRadius = 4
+        $0.layer.shadowOffset = .init(width: 0, height: 0)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +46,14 @@ final class HomeViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         
         profileView.layer.shadowColor = UIColor.Label.blackLabel.cgColor
+        addButton.layer.shadowColor = UIColor.Label.blackLabel.cgColor
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+//        profileView.layer.shadowPath = .init(rect: profileView.bounds, transform: nil)
+//        addButton.layer.shadowPath = .init(rect: addButton.bounds, transform: nil)
     }
     
 }
@@ -56,7 +70,7 @@ private extension HomeViewController {
     }
     
     func configureSelf() {
-        [profileView, questList].forEach {
+        [profileView, questList, addButton].forEach {
             view.addSubview($0)
         }
         questList.delegate = self
@@ -72,6 +86,12 @@ private extension HomeViewController {
             $0.top.equalTo(profileView.snp.bottom).offset(20)
             $0.directionalHorizontalEdges.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview()
+        }
+        
+        addButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(116)
+            $0.trailing.equalToSuperview().inset(16)
+            $0.size.equalTo(80)
         }
     }
     
