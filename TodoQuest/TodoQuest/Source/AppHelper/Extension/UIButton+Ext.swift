@@ -15,7 +15,7 @@ extension UIButton.Configuration {
     ///   - image: 버튼에 넣을 Image
     /// - Returns: UIButton.Configuration
     static func tabButtonStyle(_ title: String?, _ image: UIImage?) -> Self {
-        var config = Self.plain()
+        var config = self.plain()
         config.image = image
         config.imagePlacement = .top
         config.imagePadding = 4
@@ -26,6 +26,20 @@ extension UIButton.Configuration {
         config.attributedTitle = attr
         config.baseBackgroundColor = .clear
         config.baseForegroundColor = .CustomColors.blueGray
+        
+        return config
+    }
+    
+    static var floatingButtonStyle: Self {
+        var config = self.filled()
+        config.image = UIImage(systemName: "paintbrush.pointed.fill")
+        config.imagePadding = 0
+        config.imagePlacement = .all
+        config.baseForegroundColor = .View.whiteBody
+        config.baseBackgroundColor = .CustomColors.personal
+        config.cornerStyle = .capsule
+        config.background.strokeColor = .View.whiteBody
+        config.background.strokeWidth = 3
         
         return config
     }
