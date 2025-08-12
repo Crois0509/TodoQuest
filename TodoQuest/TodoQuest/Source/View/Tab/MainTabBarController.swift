@@ -26,7 +26,7 @@ final class MainTabBarController: UIViewController {
     }
     
     private let backgroundView = UIView().then {
-        $0.backgroundColor = .CustomColors.lightGray
+        $0.backgroundColor = .View.lightGrayBody
         $0.layer.cornerRadius = 16
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.masksToBounds = false
@@ -61,7 +61,15 @@ final class MainTabBarController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        backgroundView.layer.shadowPath = .init(rect: backgroundView.bounds, transform: nil)
+        DispatchQueue.main.async {
+            self.backgroundView.layer.shadowPath = self.backgroundView.shadowPath
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        backgroundView.layer.shadowColor = UIColor.Label.blackLabel.cgColor
     }
     
 }
@@ -150,10 +158,8 @@ private extension MainTabBarController {
         buttons.forEach { button in
             if button.tag == index {
                 button.configuration?.baseForegroundColor = .CustomColors.personal
-                button.configuration?.attributedTitle?.font = UIFont.boldSystemFont(ofSize: 14)
             } else {
                 button.configuration?.baseForegroundColor = .CustomColors.blueGray
-                button.configuration?.attributedTitle?.font = UIFont.systemFont(ofSize: 14)
             }
         }
     }

@@ -19,7 +19,7 @@ final class MainViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
-    private let mainTab = MainTabBarController([FirstVC(), SecondVC(), ThirdVC()])
+    private let mainTab = MainTabBarController([HomeViewController(), SecondVC(), ThirdVC()])
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,20 +35,21 @@ private extension MainViewController {
     
     func setupUI() {
         configureSelf()
-        setupLayout()
         setupChildVC()
     }
     
     func configureSelf() {
+        let leftButton = createBarButton().then {
+            $0.tintColor = .clear
+            $0.isEnabled = false
+        }
+        
         navigationController?.isNavigationBarHidden = false
         navigationItem.titleView = titleLogo
         navigationItem.setRightBarButton(createBarButton(), animated: false)
+        navigationItem.setLeftBarButton(leftButton, animated: false)
         
-        view.backgroundColor = .CustomColors.mainWhite
-    }
-    
-    func setupLayout() {
-        
+        view.backgroundColor = .Background.background
     }
     
     func setupChildVC() {
@@ -63,7 +64,7 @@ private extension MainViewController {
     
     func createBarButton() -> UIBarButtonItem {
         return UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: nil, action: nil).then {
-            $0.tintColor = .CustomColors.mainBlack
+            $0.tintColor = .Label.blackLabel
         }
     }
     
