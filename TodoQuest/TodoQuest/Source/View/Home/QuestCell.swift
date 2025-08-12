@@ -51,7 +51,7 @@ final class QuestCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        contentView.addBottomBorderWithShapeLayer(with: .View.lightGrayBody, and: 1)
+        contentView.addBottomBorderWithShapeLayer(with: .View.lightGrayBody, and: 2)
     }
     
     func configCell(_ quest: String, _ complete: Bool, _ priority: QuestPriority) {
@@ -74,7 +74,6 @@ private extension QuestCell {
     func setupUI() {
         configureSelf()
         setupLayout()
-        setupContentView()
     }
     
     func configureSelf() {
@@ -83,9 +82,6 @@ private extension QuestCell {
         }
         backgroundColor = .clear
         selectionStyle = .none
-    }
-    
-    func setupContentView() {
         contentView.backgroundColor = .clear
     }
     
