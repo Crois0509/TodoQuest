@@ -14,7 +14,7 @@ final class QuestListView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         backgroundColor = .clear
-        separatorStyle = .singleLine
+        separatorStyle = .none
         separatorInset = .init(top: 0, left: 8, bottom: 0, right: 8)
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false

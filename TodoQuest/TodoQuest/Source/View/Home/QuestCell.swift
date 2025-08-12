@@ -51,7 +51,7 @@ final class QuestCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        priorityLabel.layer.cornerRadius = priorityLabel.bounds.height / 2
+        contentView.addBottomBorderWithShapeLayer(with: .View.lightGrayBody, and: 1)
     }
     
     func configCell(_ quest: String, _ complete: Bool, _ priority: QuestPriority) {
@@ -74,6 +74,7 @@ private extension QuestCell {
     func setupUI() {
         configureSelf()
         setupLayout()
+        setupContentView()
     }
     
     func configureSelf() {
@@ -81,8 +82,11 @@ private extension QuestCell {
             contentView.addSubview($0)
         }
         backgroundColor = .clear
-        contentView.backgroundColor = .clear
         selectionStyle = .none
+    }
+    
+    func setupContentView() {
+        contentView.backgroundColor = .clear
     }
     
     func setupLayout() {
@@ -98,7 +102,7 @@ private extension QuestCell {
         
         priorityLabel.snp.makeConstraints {
             $0.directionalVerticalEdges.equalToSuperview().inset(5)
-            $0.trailing.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(10)
             $0.leading.equalTo(questLabel.snp.trailing)
             $0.width.lessThanOrEqualTo(40)
         }
