@@ -23,4 +23,8 @@ extension UIView {
         self.layer.addSublayer(borderLayer)
     }
     
+    var shadowPath: CGPath {
+        return UIBezierPath(roundedRect: self.bounds, cornerRadius: self.layer.cornerRadius).cgPath
+    }
+    
 }
