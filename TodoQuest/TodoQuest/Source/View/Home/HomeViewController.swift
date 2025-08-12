@@ -52,8 +52,10 @@ final class HomeViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-//        profileView.layer.shadowPath = .init(rect: profileView.bounds, transform: nil)
-//        addButton.layer.shadowPath = .init(rect: addButton.bounds, transform: nil)
+        DispatchQueue.main.async {
+            self.profileView.layer.shadowPath = self.profileView.shadowPath
+            self.addButton.layer.shadowPath = UIBezierPath(roundedRect: self.addButton.bounds, cornerRadius: self.addButton.bounds.height / 2).cgPath
+        }
     }
     
 }

@@ -61,7 +61,9 @@ final class MainTabBarController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        backgroundView.layer.shadowPath = .init(rect: backgroundView.bounds, transform: nil)
+        DispatchQueue.main.async {
+            self.backgroundView.layer.shadowPath = self.backgroundView.shadowPath
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
