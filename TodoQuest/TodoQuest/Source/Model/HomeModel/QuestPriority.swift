@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum QuestPriority: String {
+enum QuestPriority: String, CaseIterable {
     case P0, P1, P2, P3, P4
     
     var priorityColor: UIColor? {
