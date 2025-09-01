@@ -17,6 +17,7 @@
 		AA9FE1122E422B44001BE493 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = AA9FE1112E422B44001BE493 /* FirebaseAppCheck */; };
 		AA9FE1142E422B44001BE493 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = AA9FE1132E422B44001BE493 /* FirebaseCrashlytics */; };
 		AA9FE1162E422B44001BE493 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = AA9FE1152E422B44001BE493 /* FirebaseFirestore */; };
+		AAF82C582E655E3000E581C7 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = AAF82C572E655E3000E581C7 /* FSCalendar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 				AA9FE1142E422B44001BE493 /* FirebaseCrashlytics in Frameworks */,
 				AA9FE10D2E422AEB001BE493 /* ReactorKit in Frameworks */,
 				AA9FE1022E422AB3001BE493 /* SnapKit in Frameworks */,
+				AAF82C582E655E3000E581C7 /* FSCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +160,7 @@
 				AA9FE1112E422B44001BE493 /* FirebaseAppCheck */,
 				AA9FE1132E422B44001BE493 /* FirebaseCrashlytics */,
 				AA9FE1152E422B44001BE493 /* FirebaseFirestore */,
+				AAF82C572E655E3000E581C7 /* FSCalendar */,
 			);
 			productName = TodoQuest;
 			productReference = AA9FE0C92E422A06001BE493 /* TodoQuest.app */;
@@ -248,6 +251,7 @@
 				AA9FE1062E422AE0001BE493 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				AA9FE10B2E422AEB001BE493 /* XCRemoteSwiftPackageReference "ReactorKit" */,
 				AA9FE10E2E422B44001BE493 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				AAF82C562E655E3000E581C7 /* XCRemoteSwiftPackageReference "FSCalendar" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AA9FE0CA2E422A06001BE493 /* Products */;
@@ -668,6 +672,14 @@
 				minimumVersion = 12.1.0;
 			};
 		};
+		AAF82C562E655E3000E581C7 /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -720,6 +732,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA9FE10E2E422B44001BE493 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		AAF82C572E655E3000E581C7 /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAF82C562E655E3000E581C7 /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
