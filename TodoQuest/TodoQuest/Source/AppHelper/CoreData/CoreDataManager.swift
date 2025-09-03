@@ -99,3 +99,11 @@ final class CoreDataManager: CoreDataManagable, ReactiveCompatible {
         }
     }
 }
+
+extension Reactive where Base: CoreDataManager {
+    
+    func fetchTodoList() -> Observable<[Todo]> {
+        base.fetch().asObservable()
+    }
+    
+}
