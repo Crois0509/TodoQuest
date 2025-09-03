@@ -11,21 +11,6 @@ import SnapKit
 
 final class HomeViewController: UIViewController {
     
-    // TODO: Test, MockData
-    let todayQuest: [QuestItem] = [
-        .init(quest: "영어 단어 암기", check: false, priority: .P0),
-        .init(quest: "운동하기", check: false, priority: .P1),
-        .init(quest: "독서하기", check: false, priority: .P2),
-        .init(quest: "은행 다녀오기", check: false, priority: .P3)
-    ]
-    
-    let completeQuest: [QuestItem] = [
-        .init(quest: "아침밥 먹기", check: true, priority: .P0),
-        .init(quest: "노트 구매", check: true, priority: .P1),
-        .init(quest: "택배 보내기", check: true, priority: .P2),
-        .init(quest: "교통카드 충전", check: true, priority: .P3),
-    ]
-    
     private var dataSource: DataSource!
     
     private let profileView = MainProfileView()
@@ -119,8 +104,8 @@ private extension HomeViewController {
     func applyInitialSnapShot() {
         var snapshot = Snapshot()
         snapshot.appendSections(QuestSection.allCases)
-        snapshot.appendItems(todayQuest, toSection: .todayQuest)
-        snapshot.appendItems(completeQuest, toSection: .completeQuest)
+        snapshot.appendItems([], toSection: .todayQuest)
+        snapshot.appendItems([], toSection: .completeQuest)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
