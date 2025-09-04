@@ -138,6 +138,7 @@ private extension CalendarViewController {
     }
     
     func applySnapShot(_ items: [QuestItem]) {
+        questListView.backgroundView?.isHidden = !items.isEmpty
         var snapshot = Snapshot()
         snapshot.appendSections(SectionForDate.allCases)
         snapshot.appendItems(items)
