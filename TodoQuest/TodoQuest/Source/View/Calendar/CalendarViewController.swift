@@ -82,7 +82,7 @@ private extension CalendarViewController {
     }
     
     func setupLayout() {
-        [calendarHeader, calendarView, questListView, indicator].forEach {
+        [calendarHeader, questListView, calendarView, indicator].forEach {
             view.addSubview($0)
         }
         
@@ -92,20 +92,29 @@ private extension CalendarViewController {
             $0.height.equalTo(32)
         }
         
-        calendarView.snp.makeConstraints {
-            $0.top.equalTo(calendarHeader.snp.bottom)
+        questListView.snp.makeConstraints {
             $0.directionalHorizontalEdges.equalTo(calendarHeader)
-            $0.height.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.4)
+            $0.bottom.equalToSuperview()
+            $0.height.greaterThanOrEqualTo(view.safeAreaLayoutGuide).multipliedBy(0.4)
         }
         
-        questListView.snp.makeConstraints {
-            $0.top.equalTo(calendarView.snp.bottom).offset(24)
-            $0.directionalHorizontalEdges.equalTo(calendarView)
-            $0.bottom.equalToSuperview()
+        calendarView.snp.makeConstraints {
+            $0.top.equalTo(calendarHeader.snp.bottom).offset(8)
+            $0.directionalHorizontalEdges.equalTo(calendarHeader)
+            $0.bottom.equalTo(questListView.snp.top)
+            self.calendarHeightConstraint = $0.height.equalTo(400).constraint
         }
         
         indicator.snp.makeConstraints {
             $0.directionalEdges.equalToSuperview()
+        }
+    }
+    
+    func changeCalendarScope(_ isWeek: Bool) {
+        if isWeek {
+            calendarView.setScope(.week, animated: true)
+        } else {
+            calendarView.setScope(.month, animated: true)
         }
     }
     
@@ -165,6 +174,10 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
         selectedDateEvent.accept(date)
     }
     
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
+        calendarHeightConstraint?.update(offset: bounds.height)
+    }
+    
 }
 
 // MARK: - CalendarVC Reactor
@@ -172,6 +185,9 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
 extension CalendarViewController: View {
     
     func bind(reactor: CalendarReactor) {
+        
+        // MARK: - Output
+        
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
             .bind(to: indicator.rx.isAnimating)
@@ -184,9 +200,42 @@ extension CalendarViewController: View {
             .withUnretained(self)
             .bind { owner, items in
                 owner.applySnapShot(items)
-                debugPrint("updateSnapshot")
             }
             .disposed(by: disposeBag)
+        
+        reactor.state.compactMap(\.headerTitle)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .bind { owner, title in
+                owner.calendarHeader.configTitle(title)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.currentPage)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .bind { owner, date in
+                owner.calendarView.setCurrentPage(date, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.allItems)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .bind { owner, items in
+                owner.events = items.compactMap { $0.editDate }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.calendarScopeIsWeek)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .bind { owner, isWeek in
+                owner.changeCalendarScope(isWeek)
+            }
+            .disposed(by: disposeBag)
+        
+        // MARK: - Input
         
         Observable.just(.fetchTodoList)
             .bind(to: reactor.action)
@@ -195,6 +244,37 @@ extension CalendarViewController: View {
         selectedDateEvent
             .distinctUntilChanged()
             .map { .selectedDate($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        Observable.merge(
+            calendarHeader.rx.nextTapped.map { [weak self] _ in
+                if let self, self.calendarView.scope == .month {
+                    return self.calendarView.currentPage.addMonth(1)
+                } else if let self, self.calendarView.scope == .week {
+                    return self.calendarView.currentPage.addWeek(1)
+                } else {
+                    return Date()
+                }
+            },
+            calendarHeader.rx.previousTapped.map { [weak self] _ in
+                if let self, self.calendarView.scope == .month {
+                    return self.calendarView.currentPage.addMonth(-1)
+                } else if let self, self.calendarView.scope == .week {
+                    return self.calendarView.currentPage.addWeek(-1)
+                } else {
+                    return Date()
+                }
+            }
+        )
+        .distinctUntilChanged()
+        .map { .changeCurrentPage($0) }
+        .bind(to: reactor.action)
+        .disposed(by: disposeBag)
+        
+        questListView.rx.contentOffset
+            .distinctUntilChanged()
+            .map { .changeScrollOffset($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
