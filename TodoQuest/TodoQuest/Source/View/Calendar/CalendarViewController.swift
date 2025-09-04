@@ -11,16 +11,32 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import ReactorKit
+import FSCalendar
 
 final class CalendarViewController: UIViewController {
     
     // MARK: - Rx Properties
     
     var disposeBag = DisposeBag()
+    private let selectedDateEvent = PublishRelay<Date>()
     
     // MARK: - Properties
     
     private var dataSource: DataSource!
+    
+    /// 이벤트가 새롭게 설정되면, 이전 이벤트와 비교하여 새로운 값만 이벤트 reload
+    private var events: [Date] = [] {
+        didSet {
+            guard oldValue != events else { return }
+            let filteredEvent = events.filter { !oldValue.contains($0) }
+            
+            filteredEvent.forEach {
+                _ = calendar(calendarView, numberOfEventsFor: $0)
+            }
+        }
+    }
+    
+    private var calendarHeightConstraint: Constraint?
     
     // MARK: - UI Components
     
@@ -31,7 +47,10 @@ final class CalendarViewController: UIViewController {
     }
     
     private let calendarHeader = CalendarHeaderView()
-    private let calendarView = CalendarView()
+    private lazy var calendarView = CalendarView().then {
+        $0.delegate = self
+        $0.dataSource = self
+    }
     private let questListView = QuestListView().then {
         $0.contentInset.bottom = 100
     }
@@ -132,6 +151,22 @@ extension CalendarViewController: UITableViewDelegate {
     
 }
 
+// MARK: - CalendarView Delegate&DataSource
+
+extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
+    
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        let todayEvent = events.filter { Calendar.current.isDate($0, equalTo: date, toGranularity: .day) }
+        
+        return min(todayEvent.count, 3)
+    }
+    
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        selectedDateEvent.accept(date)
+    }
+    
+}
+
 // MARK: - CalendarVC Reactor
 
 extension CalendarViewController: View {
@@ -157,7 +192,7 @@ extension CalendarViewController: View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        calendarView.rx.selectedDate
+        selectedDateEvent
             .distinctUntilChanged()
             .map { .selectedDate($0) }
             .bind(to: reactor.action)
