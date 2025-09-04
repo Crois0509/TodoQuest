@@ -8,8 +8,13 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
+import RxCocoa
 
 final class CalendarHeaderView: UIStackView {
+    
+    fileprivate let previousTapped = PublishRelay<Void>()
+    fileprivate let nextTapped = PublishRelay<Void>()
     
     // MARK: - Properties
     
@@ -48,6 +53,37 @@ final class CalendarHeaderView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard let hitTest = super.hitTest(point, with: event) else { return nil }
+        
+        if hitTest == self || subviews.contains(hitTest) {
+            let previous = bounds.maxX / 3
+            let next = (bounds.maxX / 3) * 2
+            
+            if point.x <= previous || point.x >= next {
+                return self
+            } else {
+                return nil
+            }
+        }
+        
+        return hitTest
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        
+        let previous = bounds.maxX / 3
+        let next = (bounds.maxX / 3) * 2
+        
+        if location.x <= previous {
+            previousTapped.accept(())
+        } else if location.x >= next {
+            nextTapped.accept(())
+        }
+    }
+    
     // MARK: - Method
     
     func configTitle(_ title: String) {
@@ -78,6 +114,16 @@ private extension CalendarHeaderView {
         }
     }
     
+}
+
+extension Reactive where Base: CalendarHeaderView {
+    var previousTapped: Observable<Void> {
+        base.previousTapped.asObservable()
+    }
+    
+    var nextTapped: Observable<Void> {
+        base.nextTapped.asObservable()
+    }
 }
 
 // MARK: - Preview
