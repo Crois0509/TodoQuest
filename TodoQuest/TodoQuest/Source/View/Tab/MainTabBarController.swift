@@ -61,6 +61,11 @@ final class MainTabBarController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
+        let bgHeight = view.safeAreaInsets.bottom > 0 ? 100 : 72
+        backgroundView.snp.updateConstraints {
+            $0.height.equalTo(bgHeight)
+        }
+        
         DispatchQueue.main.async {
             self.backgroundView.layer.shadowPath = self.backgroundView.shadowPath
         }

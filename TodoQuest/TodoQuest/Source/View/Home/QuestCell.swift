@@ -54,7 +54,7 @@ final class QuestCell: UITableViewCell {
         contentView.addBottomBorderWithShapeLayer(with: .View.lightGrayBody, and: 2)
     }
     
-    func configCell(_ quest: String, _ complete: Bool, _ priority: QuestPriority) {
+    func configCell(_ quest: String?, _ complete: Bool, _ priority: QuestPriority) {
         questLabel.text = quest
         priorityLabel.text = priority.rawValue
         priorityLabel.backgroundColor = priority.priorityColor
@@ -62,6 +62,11 @@ final class QuestCell: UITableViewCell {
         if complete {
             checkBox.setImage(UIImage(systemName: "checkmark.square.fill"), for: .normal)
             checkBox.tintColor = .CustomColors.personal
+            priorityLabel.isHidden = true
+        } else {
+            checkBox.setImage(UIImage(systemName: "square"), for: .normal)
+            checkBox.tintColor = .CustomColors.blueGray
+            priorityLabel.isHidden = false
         }
     }
     

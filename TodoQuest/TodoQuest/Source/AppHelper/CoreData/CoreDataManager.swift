@@ -7,6 +7,9 @@
 
 import UIKit
 import CoreData
+import RxSwift
+import RxCocoa
+import ReactorKit
 
 // MARK: - CoreData Protocols
 
@@ -22,7 +25,7 @@ protocol CoreDataManagable: AnyObject {
     var persistentContainer: NSPersistentContainer { get }
     
     func create(with model: Model)
-    func fetch() -> [Entity]
+    func fetch() -> Single<[Entity]>
     func update(_ id: NSManagedObjectID, updateData: Entity)
     func search(_ id: NSManagedObjectID) -> Entity?
     func delete(_ entity: Entity)
@@ -45,7 +48,7 @@ extension CoreDataManagable {
 
 // MARK: - CoreDataManager
 
-final class CoreDataManager: CoreDataManagable {
+final class CoreDataManager: CoreDataManagable, ReactiveCompatible {
     typealias Model = TodoDTO
     typealias Entity = Todo
     
@@ -56,9 +59,11 @@ final class CoreDataManager: CoreDataManagable {
         try? save()
     }
     
-    func fetch() -> [Entity] {
+    func fetch() -> Single<[Entity]> {
         let request: NSFetchRequest<Entity> = Entity.fetchRequest()
-        return (try? context.fetch(request)) ?? []
+        let todoList = try? context.fetch(request)
+        
+        return .just(todoList ?? [])
     }
 
     func update(_ id: NSManagedObjectID, updateData: Entity) {
@@ -88,8 +93,17 @@ final class CoreDataManager: CoreDataManagable {
         
         do {
             try context.save()
+            debugPrint("context saved")
         } catch let error {
-            print("Error saving Core Data: \(error)")
+            debugPrint("Error saving Core Data: \(error)")
         }
     }
+}
+
+extension Reactive where Base: CoreDataManager {
+    
+    func fetchTodoList() -> Observable<[Todo]> {
+        base.fetch().asObservable()
+    }
+    
 }

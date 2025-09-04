@@ -19,7 +19,13 @@ final class MainViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
-    private let mainTab = MainTabBarController([HomeViewController(), SecondVC(), ThirdVC()])
+    private let manager = CoreDataManager()
+    
+    private let homeVC = HomeViewController()
+    private let calendarVC = CalendarViewController()
+    private let profileVC = ThirdVC()
+    
+    private lazy var mainTab = MainTabBarController([homeVC, calendarVC, profileVC])
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +42,7 @@ private extension MainViewController {
     func setupUI() {
         configureSelf()
         setupChildVC()
+        setupReactor()
     }
     
     func configureSelf() {
@@ -68,23 +75,13 @@ private extension MainViewController {
         }
     }
     
+    func setupReactor() {
+        calendarVC.reactor = CalendarReactor(repo: manager)
+    }
+    
 }
 
 // TODO: Test ViewControllers
-class FirstVC: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .red
-    }
-}
-
-class SecondVC: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
-    }
-}
-
 class ThirdVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -19,7 +19,7 @@ final class QuestHeaderView: UILabel {
         font = .SCDream(size: 20, weight: .bold)
         textColor = .Label.blackLabel
         textAlignment = .left
-        backgroundColor = .clear
+        backgroundColor = .Background.background
         numberOfLines = 1
     }
     

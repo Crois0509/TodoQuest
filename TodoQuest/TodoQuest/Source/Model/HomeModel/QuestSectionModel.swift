@@ -23,7 +23,8 @@ enum QuestSection: CaseIterable {
 
 struct QuestItem: Hashable {
     let id = UUID()
-    let quest: String
+    let editDate: Date?
+    let quest: String?
     let check: Bool
     let priority: QuestPriority
 }
