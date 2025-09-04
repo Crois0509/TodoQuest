@@ -30,6 +30,11 @@ final class CalendarReactor: Reactor {
         case .selectedDate(let date):
             return .just(.selectedTodoList(date))
 
+        case .changeCurrentPage(let date):
+            return .just(.setCurrentPage(date))
+            
+        case .changeScrollOffset(let point):
+            return .just(.setCalendarScale(point))
         }
     }
     
@@ -63,6 +68,16 @@ final class CalendarReactor: Reactor {
             newState.selectTodoList = selectItems
             debugPrint("filtered load items count: \(selectItems.count)")
             
+        case .setCurrentPage(let date):
+            newState.currentPage = date
+            newState.headerTitle = date.dateFormatToYearMonth()
+            
+        case .setCalendarScale(let point):
+            if point.y >= 200 {
+                newState.calendarScopeIsWeek = true
+            } else {
+                newState.calendarScopeIsWeek = false
+            }
         }
         
         return newState
