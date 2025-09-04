@@ -14,8 +14,6 @@ final class CalendarReactor: Reactor {
     let initialState: State = State()
     private let manager: CoreDataManager
     
-    private var allItems: [QuestItem] = []
-    
     init(repo: CoreDataManager) {
         self.manager = repo
     }
@@ -58,8 +56,13 @@ final class CalendarReactor: Reactor {
             newState.selectTodoList = items.filter { Calendar.current.isDate($0.editDate ?? Date(), equalTo: defaultDate, toGranularity: .day) }
             
         case .selectedTodoList(let date):
-            newState.selectTodoList = state.allItems.filter { Calendar.current.isDate($0.editDate ?? Date(), equalTo: date, toGranularity: .day) }
-            debugPrint("filtered load items count: \(newState.selectTodoList.count)")
+            let selectItems = state.allItems.filter {
+                Calendar.current.isDate($0.editDate ?? Date(), equalTo: date, toGranularity: .day)
+            }.sorted { first, _ in first.check }
+            
+            newState.selectTodoList = selectItems
+            debugPrint("filtered load items count: \(selectItems.count)")
+            
         }
         
         return newState
@@ -71,18 +74,25 @@ extension CalendarReactor {
     enum Action {
         case fetchTodoList
         case selectedDate(Date)
+        case changeCurrentPage(Date)
+        case changeScrollOffset(CGPoint)
     }
     
     enum Mutation {
         case setLoading(Bool)
         case setAllItems([Todo])
         case selectedTodoList(Date)
+        case setCurrentPage(Date)
+        case setCalendarScale(CGPoint)
     }
     
     struct State {
         var allItems: [QuestItem] = []
         var selectTodoList: [QuestItem] = []
+        var currentPage: Date = Date()
+        var headerTitle: String? = Date().dateFormatToYearMonth()
         var isLoading: Bool = false
+        var calendarScopeIsWeek: Bool = false
     }
     
 }
