@@ -102,7 +102,7 @@ private extension CalendarViewController {
             $0.top.equalTo(calendarHeader.snp.bottom).offset(8)
             $0.directionalHorizontalEdges.equalTo(calendarHeader)
             $0.bottom.equalTo(questListView.snp.top)
-            self.calendarHeightConstraint = $0.height.equalTo(400).constraint
+            self.calendarHeightConstraint = $0.height.equalTo(300).constraint
         }
         
         indicator.snp.makeConstraints {
