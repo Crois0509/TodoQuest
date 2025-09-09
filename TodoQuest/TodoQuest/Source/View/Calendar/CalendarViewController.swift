@@ -40,11 +40,7 @@ final class CalendarViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private let indicator = UIActivityIndicatorView().then {
-        $0.style = .large
-        $0.color = .white
-        $0.backgroundColor = .black.withAlphaComponent(0.3)
-    }
+    private let indicator = IndicatorView()
     
     private let calendarHeader = CalendarHeaderView()
     private lazy var calendarView = CalendarView().then {
@@ -195,7 +191,6 @@ extension CalendarViewController: View {
             .disposed(by: disposeBag)
         
         reactor.state.map(\.selectTodoList)
-            .skip(until: self.rx.viewDidAppear)
             .take(until: self.rx.deallocated)
             .distinctUntilChanged()
             .withUnretained(self)
