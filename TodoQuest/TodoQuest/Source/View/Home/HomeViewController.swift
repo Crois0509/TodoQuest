@@ -8,11 +8,17 @@
 import UIKit
 import Then
 import SnapKit
+import RxSwift
+import RxCocoa
+import ReactorKit
 
 final class HomeViewController: UIViewController {
     
+    var disposeBag = DisposeBag()
+    
     private var dataSource: DataSource!
     
+    private let indicator = IndicatorView()
     private let profileView = MainProfileView()
     private let questList = QuestListView()
     private let addButton = UIButton(configuration: .floatingButtonStyle).then {
@@ -62,7 +68,7 @@ private extension HomeViewController {
     }
     
     func configureSelf() {
-        [profileView, questList, addButton].forEach {
+        [profileView, questList, addButton, indicator].forEach {
             view.addSubview($0)
         }
         questList.delegate = self
@@ -84,6 +90,10 @@ private extension HomeViewController {
             $0.bottom.equalToSuperview().inset(116)
             $0.trailing.equalToSuperview().inset(16)
             $0.size.equalTo(80)
+        }
+        
+        indicator.snp.makeConstraints {
+            $0.directionalEdges.equalToSuperview()
         }
     }
     
@@ -108,11 +118,20 @@ private extension HomeViewController {
     
     func applyInitialSnapShot() {
         var snapshot = Snapshot()
-        snapshot.appendSections(QuestSection.allCases)
+        snapshot.appendSections([.todayQuest])
         snapshot.appendItems([], toSection: .todayQuest)
-        snapshot.appendItems([], toSection: .completeQuest)
         
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    func updateSnapShot(_ items: [QuestItem]) {
+        var snapshot = dataSource.snapshot()
+        let filteredItems = items.filter { !snapshot.itemIdentifiers.contains($0) }
+        
+        questList.backgroundView?.isHidden = !filteredItems.isEmpty
+        
+        snapshot.appendItems(filteredItems, toSection: .todayQuest)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
 }
@@ -127,6 +146,61 @@ extension HomeViewController: UITableViewDelegate {
         let headerView = QuestHeaderView(section.sectionTitle)
         
         return headerView
+    }
+    
+}
+
+// MARK: - HomeVC Reactor
+
+extension HomeViewController: View {
+    
+    func bind(reactor: HomeReactor) {
+        
+        // MARK: - Output
+        
+        reactor.state.map(\.todoItems)
+            .skip(until: self.rx.viewDidAppear)
+            .distinctUntilChanged()
+            .withUnretained(self)
+            .bind { owner, items in
+                owner.updateSnapShot(items)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
+            .bind(to: indicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.modalItem)
+            .skip(until: Observable.merge(addButton.rx.tap.map { _ in }, questList.rx.itemSelected.map { _ in }))
+            .withUnretained(self)
+            .bind { owner, item in
+                // Modal Present
+                debugPrint("show modal \(item)")
+            }
+            .disposed(by: disposeBag)
+        
+        // MARK: - Input
+        
+        self.rx.viewDidAppear
+            .take(1)
+            .map { .fetchTodoList }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        addButton.rx.tap
+            .throttle(.seconds(1), scheduler: MainScheduler())
+            .map { .requestShowModal }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        questList.rx.itemSelected
+            .skip(until: self.rx.viewDidAppear)
+            .throttle(.seconds(1), scheduler: MainScheduler())
+            .map { .requestShowTodoEditer($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
 }

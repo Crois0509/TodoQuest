@@ -76,6 +76,7 @@ private extension MainViewController {
     }
     
     func setupReactor() {
+        homeVC.reactor = HomeReactor(repo: manager)
         calendarVC.reactor = CalendarReactor(repo: manager)
     }
     
