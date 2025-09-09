@@ -10,6 +10,12 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UIViewController {
+    var viewDidLoad: Observable<Void> {
+        return self.base.rx.methodInvoked(#selector(Base.viewDidLoad))
+            .map { _ in }
+            .asObservable()
+    }
+    
     var viewDidAppear: Observable<Void> {
         return self.base.rx.methodInvoked(#selector(Base.viewDidAppear))
             .map { _ in }
